@@ -1,5 +1,8 @@
-Javascript implementation of Sayura transliteration scheme
-==========================================================
+Sayura.js
+=========
+
+*Javascript implementation of Sayura transliteration scheme*
+
 
 I am a fan of [sayura input method](http://www.sayura.net/im/).
 It makes typing sinhala so much easier for me. This is a close but not complete (yet!)
