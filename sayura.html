@@ -3,12 +3,30 @@
     <meta charset="utf-8">
     <title>Sayura.js</title>
     <script type="text/javascript" src="sayura.js"></script>
+    <style>
+	body{
+		font-family:Arial, Helvetica, sans-serif;
+		}
+    #wrapper{
+		width:425px;
+		margin:0 auto;
+		}
+	#input{
+		margin-bottom:20px;
+		}
+	#output{
+		min-height:25px;
+		margin-bottom:10px;
+		}
+    </style>
 </head>
 <body>
+    <div id="wrapper">
+    
     <div id="output"></div>
     <textarea rows="5" cols="50" id="input" type="text" onkeypress="onKeyPress(event)"></textarea>
-    <br />
-    <br />
     <p>Need help with Sayura? Try <a href="https://docs.google.com/viewer?url=http://www.sayura.net/im/sayura.pdf" target="_blank">this</a> (Opens in google pdf viewer)</p>
+    
+    </div>
 </body>
 </html>
