@@ -3,12 +3,37 @@
     <meta charset="utf-8">
     <title>Sayura.js Demo</title>
     <script type="text/javascript" src="sayura.js"></script>
+    <style>
+	body{
+		font-family:Arial, Helvetica, sans-serif;
+		}
+    #wrapper{
+		width:425px;
+		margin:0 auto;
+		}
+	#sayuraInput{
+		margin-bottom:20px;
+		}
+	#sayuraOutput{
+		min-height:25px;
+		margin-bottom:10px;
+        }
+    .footer{
+        font-size: 14px;
+        color: #666;
+        }
+    .footer a{
+        color: #333;
+        }
+    </style>
 </head>
 <body>
+    <div id="wrapper">
+    
     <div id="sayuraOutput"></div>
     <textarea id="sayuraInput" rows="5" cols="50" type="text"></textarea>
-    <br />
-    <br />
-    <p>Need help with Sayura? Try <a href="https://docs.google.com/viewer?url=http://www.sayura.net/im/sayura.pdf" target="_blank">this</a> (Opens in google pdf viewer)</p>
+    <p class="footer">Need help with Sayura? Try <a href="https://docs.google.com/viewer?url=http://www.sayura.net/im/sayura.pdf" target="_blank">this</a> (Opens in google pdf viewer)</p>
+    
+    </div>
 </body>
 </html>
