@@ -136,7 +136,7 @@ function sayura(e)
                 outputDiv.removeChild(outputDiv.lastChild);
                 prevChar = String.fromCharCode(buffer[mark-1]);
                 newContent.innerHTML = String.fromCharCode(consonents[prevChar][2]);
-            } else if(value == 72 && isConsonent(buffer[mark-1])){
+            } else if((value == 72 || value == 102) && isConsonent(buffer[mark-1])){
                 //mahaprana
                 outputDiv.removeChild(outputDiv.lastChild);
                 prevChar = String.fromCharCode(buffer[mark-1]);
@@ -144,6 +144,9 @@ function sayura(e)
             } else if((value == 82 || value == 89) && isConsonent(buffer[mark-1])){
                 //add al-kirima, zero width joiner and r/y for rakaransaya/yansaya
                 newContent.innerHTML = String.fromCharCode(0xdca, 0x200d, consonents[chr][0]);
+            } else if(value == 87 && isConsonent(buffer[mark-1])){
+                //zero width joineri, al-kirima for bandi-akuru
+                newContent.innerHTML = String.fromCharCode(0x200d, 0xdca);
             } else {
                 newContent.innerHTML = String.fromCharCode(consonents[chr][0]);
             }
