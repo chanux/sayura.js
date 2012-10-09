@@ -98,9 +98,9 @@ function specialKeys(e)
     var outputDiv = document.getElementById('sayuraOutput');
     if (e.which == 8){
         var textNode = outputDiv.lastChild;
-        outputDiv.removeChild(textNode);
+        if (textNode != null) outputDiv.removeChild(textNode);
         buffer.pop();
-        mark--;
+        if (mark != -1) mark--;
         return;
     }
 }
