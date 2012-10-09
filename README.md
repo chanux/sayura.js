@@ -14,7 +14,7 @@ There's quite a bit of space for improvement. Hopefully I won't get bored of thi
 Backstory
 ---------
 I recently installed Ubuntu 12.04 and realized there is no ibus-sayura build for it.
-That's not th only reason for writing this. I was working on a 
+That's not the only reason for writing this. I was working on a 
 [transliterator for tripitaka text](https://github.com/chanux/metta-transliterator)
 and had plans to port it JS too. I thought implementing sayura.js would be a good 
 excercise before actually give a go at it. Also sayura.js will be helpful when I'm not
