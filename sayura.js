@@ -112,27 +112,26 @@ function onKeyPress(e)
 
         if(isVowel(value)){
             if(buffer.length == 0 || !isAlphabetical(buffer[mark-1])){
-                console.log(!isAlphabetical(buffer[mark-1]));
                 newContent.innerHTML = String.fromCharCode(vowels[chr][0]);
             } else if(isConsonent(buffer[mark-1])){
-                console.log(vowels[chr][2])
                 newContent.innerHTML = String.fromCharCode(vowels[chr][2]);
-            } else if(value == buffer[mark-1]){
-                var textNode = outputDiv.lastChild;
-                outputDiv.removeChild(textNode);
+            } else if(value == buffer[mark-1] && isConsonent(buffer[mark-2])){
+                outputDiv.removeChild(outputDiv.lastChild);
                 newContent.innerHTML = String.fromCharCode(vowels[chr][3]);
+            } else if(value == buffer[mark-1]){
+                outputDiv.removeChild(outputDiv.lastChild);
+                newContent.innerHTML = String.fromCharCode(vowels[chr][1]);
             }
+
         } else {
             if(value == 71 && isConsonent(buffer[mark-1])){
-                var textNode = outputDiv.lastChild;
-                outputDiv.removeChild(textNode);
-                console.log(consonents[chr][2]);
+                //sanyaka
+                outputDiv.removeChild(outputDiv.lastChild);
                 prevChar = String.fromCharCode(buffer[mark-1]);
                 newContent.innerHTML = String.fromCharCode(consonents[prevChar][2]);
             } else if(value == 72 && isConsonent(buffer[mark-1])){
-                var textNode = outputDiv.lastChild;
-                outputDiv.removeChild(textNode);
-                console.log(consonents[chr][2]);
+                //mahaprana
+                outputDiv.removeChild(outputDiv.lastChild);
                 prevChar = String.fromCharCode(buffer[mark-1]);
                 newContent.innerHTML = String.fromCharCode(consonents[prevChar][1]);
             } else if((value == 82 || value == 89) && isConsonent(buffer[mark-1])){
