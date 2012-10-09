@@ -3,13 +3,13 @@ Sayura.js
 
 *Javascript implementation of Sayura transliteration scheme*
 
-With sayura.js you can have the ease of [sayura](http://www.sayura.net/im/) sinhala phonetic input method's awesomeness anywhere.
+With sayura.js you can have the ease of [sayura](http://www.sayura.net/im/) sinhala phonetic input method's awesomeness pretty much anywhere.
 
 Annoyances (I'd hopefully fix)
 ----------
-* You don't feel like typing in sinhala!
-* Currently You can't go back to place in text and edit there.
-* Line breaks don't do anything meaningful in sinhala text.
+* You don't feel like you are typing in sinhala! (sinhala shows up in different div)
+* Currently You can't go back to a place in text and edit there.
+* Line breaks don't do anything in sinhala text.
 * Chrome refuse to render sinhala text properly.
 
 Demo
@@ -29,3 +29,4 @@ at my fine setup :)
 
 My JS is rusty. I never properly learned the language (hi jQuery!). So the code may look
 funny and fugly at places.
+
