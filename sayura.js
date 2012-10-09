@@ -1,5 +1,6 @@
 var buffer = [];
 var mark = -1;
+
 consonents = {
 // key : [character, mahaprana, sanyaka]
     z : [0xda4, 0x00, 0x00],
@@ -91,11 +92,10 @@ function isConsonent(chr)
     return false;
 }
 
-function onKeyPress(e)
+function specialKeys(e)
 {
-    var value = e.charCode;
-    var outputDiv = document.getElementById('output');
-
+    if (!e) var e = window.event; //for IE
+    var outputDiv = document.getElementById('sayuraOutput');
     if (e.which == 8){
         var textNode = outputDiv.lastChild;
         outputDiv.removeChild(textNode);
@@ -103,6 +103,13 @@ function onKeyPress(e)
         mark--;
         return;
     }
+}
+
+function sayura(e)
+{
+    if (!e) var e = window.event; //for IE
+    var outputDiv = document.getElementById('sayuraOutput'); 
+    var value = e.charCode;
 
     if (isAlphabetical(value)) {
         var chr = String.fromCharCode(value);
@@ -150,8 +157,18 @@ function onKeyPress(e)
         newContent.innerHTML = String.fromCharCode(value);
         buffer.push(String.fromCharCode(value));
         mark++;
+
         while(newContent.firstChild){
             outputDiv.appendChild(newContent.firstChild)
         }
     }
 }
+
+function load()
+{
+    var input = document.getElementById("sayuraInput");
+    input.addEventListener("keypress", sayura, false);
+    input.addEventListener("keydown", specialKeys, false);
+}
+
+document.addEventListener("DOMContentLoaded", load, false);
