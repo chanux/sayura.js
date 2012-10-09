@@ -36,7 +36,6 @@ consonents = {
 	c : [0xda0, 0xda1, 0x00],
 	C : [0xda1, 0xda1, 0x00],
 	v : [0xdc0, 0x00, 0x00],
-	V : [0xdc0, 0x00, 0x00],
 	b : [0xdb6, 0xdb7, 0xdb9],
 	B : [0xdb7, 0xdb7, 0xdb9],
 	n : [0xdb1, 0x00, 0xd82],
@@ -58,7 +57,7 @@ vowels = {
 	O : [0xd96, 0x00, 0xdde, 0xddf],
 	u : [0xd8b, 0xd8c, 0xdd4, 0xdd6],
 	U : [0xd8d, 0xd8e, 0xdd8, 0xdf2],
-	Z : [0xd8f, 0xd90, 0xd8f, 0xd90]
+	V : [0xd8f, 0xd90, 0xd8f, 0xd90]
 }
 
 function isAlphabetical(charCode)
@@ -76,9 +75,9 @@ function isAlphabetical(charCode)
 
 function isVowel(chr)
 {
-    /* A E I O U Z
+    /* A E I O U V
        a e i o u q */
-    var vowelCodes = ["65", "69", "73", "79", "85", "90",
+    var vowelCodes = ["65", "69", "73", "79", "85", "86",
                        "97", "101", "105", "111", "117", "113"]; 
     for(var i=0;i<vowelCodes.length;i++){
         if(vowelCodes[i]==chr){return true};
@@ -145,7 +144,7 @@ function sayura(e)
                 //add al-kirima, zero width joiner and r/y for rakaransaya/yansaya
                 newContent.innerHTML = String.fromCharCode(0xdca, 0x200d, consonents[chr][0]);
             } else if(value == 87 && isConsonent(buffer[mark-1])){
-                //zero width joineri, al-kirima for bandi-akuru
+                //zero width joiner, al-kirima for bandi-akuru
                 newContent.innerHTML = String.fromCharCode(0x200d, 0xdca);
             } else {
                 newContent.innerHTML = String.fromCharCode(consonents[chr][0]);
