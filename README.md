@@ -7,14 +7,14 @@ With sayura.js you can have the ease of [sayura](http://www.sayura.net/im/) sinh
 
 Annoyances (I'd hopefully fix)
 ----------
-* You don't feel like you are typing in sinhala! (sinhala shows up in different div)
+* ~~you don't feel like you are typing in sinhala! (sinhala shows up in different div)~~
 * Currently You can't go back to a place in text and edit there.
 * Line breaks don't do anything in sinhala text.
-* Chrome refuse to render sinhala text properly.
+* ~~Chrome refuse to render sinhala text properly.~~
 
 Demo
 -----
-I put it in my dropbox and [here](https://dl.dropbox.com/u/362794/sayura.js/sayura.html) it is.
+I put it in my dropbox and [here](https://dl.dropbox.com/u/362794/sayurajs-inplace/sayura.html) it is.
 
 *Thank you [Anuradha](https://twitter.com/the_hobbit) and everyone who worked on Sayura ever.*
 

@@ -1,5 +1,6 @@
 var buffer = [];
 var mark = -1;
+var lastChr = "";
 
 consonents = {
 // key : [character, mahaprana, sanyaka]
@@ -87,6 +88,16 @@ function isConsonent(charCode)
     return false;
 }
 
+function cleanup(e)
+{
+    if (!e) var e = window.event; //for IE
+    if (e.which != 8){
+        inputBox = document.getElementById('sayuraInput');
+        inputBox.value = inputBox.value.slice(0, - 1); 
+        inputBox.value += lastChr; 
+    }
+}
+
 function specialKeys(e)
 {
     if (!e) var e = window.event; //for IE
@@ -103,8 +114,7 @@ function specialKeys(e)
 function sayura(e)
 {
     if (!e) var e = window.event; //for IE
-    var outputDiv = document.getElementById('sayuraOutput'); 
-    var newContent = document.createElement('div');
+    inputBox = document.getElementById('sayuraInput');
     var value = e.charCode;
 
     if (isAlphabetical(value)) {
@@ -114,48 +124,42 @@ function sayura(e)
 
         if(isVowel(value)){
             if(buffer.length == 0 || !isAlphabetical(buffer[mark-1])){
-                newContent.innerHTML = String.fromCharCode(vowels[chr][0]);
+                lastChr = String.fromCharCode(vowels[chr][0]);
             } else if(isConsonent(buffer[mark-1])){
-                newContent.innerHTML = String.fromCharCode(vowels[chr][2]);
+                lastChr = String.fromCharCode(vowels[chr][2]);
             } else if(value == buffer[mark-1] && isConsonent(buffer[mark-2])){
-                outputDiv.removeChild(outputDiv.lastChild);
-                newContent.innerHTML = String.fromCharCode(vowels[chr][3]);
+                inputBox.value = inputBox.value.slice(0, -1);
+                lastChr = String.fromCharCode(vowels[chr][3]);
             } else if(value == buffer[mark-1]){
-                outputDiv.removeChild(outputDiv.lastChild);
-                newContent.innerHTML = String.fromCharCode(vowels[chr][1]);
+                lastChr = String.fromCharCode(vowels[chr][1]);
             }
 
         } else {
             if(value == 71 && isConsonent(buffer[mark-1])){
                 //sanyaka
-                outputDiv.removeChild(outputDiv.lastChild);
+                inputBox.value = inputBox.value.slice(0, -1);
                 prevChar = String.fromCharCode(buffer[mark-1]);
-                newContent.innerHTML = String.fromCharCode(consonents[prevChar][2]);
+                lastChr = String.fromCharCode(consonents[prevChar][2]);
             } else if((value == 72 || value == 102) && isConsonent(buffer[mark-1])){
+                inputBox.value = inputBox.value.slice(0, -1);
                 //mahaprana
-                outputDiv.removeChild(outputDiv.lastChild);
                 prevChar = String.fromCharCode(buffer[mark-1]);
-                newContent.innerHTML = String.fromCharCode(consonents[prevChar][1]);
+                lastChr = String.fromCharCode(consonents[prevChar][1]);
             } else if((value == 82 || value == 89) && isConsonent(buffer[mark-1])){
                 //add al-kirima, zero width joiner and r/y for rakaransaya/yansaya
-                newContent.innerHTML = String.fromCharCode(0xdca, 0x200d, consonents[chr][0]);
+                lastChr = String.fromCharCode(0xdca, 0x200d, consonents[chr][0]);
             } else if(value == 87 && isConsonent(buffer[mark-1])){
                 //zero width joiner, al-kirima for bandi-akuru
-                newContent.innerHTML = String.fromCharCode(0x200d, 0xdca);
+                lastChr = String.fromCharCode(0x200d, 0xdca);
             } else {
-                newContent.innerHTML = String.fromCharCode(consonents[chr][0]);
+                lastChr = String.fromCharCode(consonents[chr][0]);
             }
         }
 
     } else if (e.charCode != 0){
-        newContent.innerHTML = String.fromCharCode(value);
+        lastChr = String.fromCharCode(value);
         buffer.push(String.fromCharCode(value));
         mark++;
-
-    }
-
-    while(newContent.firstChild){
-        outputDiv.appendChild(newContent.firstChild)
     }
 }
 
@@ -164,6 +168,7 @@ function load()
     var input = document.getElementById("sayuraInput");
     input.addEventListener("keypress", sayura, false);
     input.addEventListener("keydown", specialKeys, false);
+    input.addEventListener("keyup", cleanup, false);
 }
 
 document.addEventListener("DOMContentLoaded", load, false);
