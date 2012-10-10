@@ -62,32 +62,28 @@ vowels = {
 
 function isAlphabetical(charCode)
 {
-    if (charCode >= 65 && charCode <= 90){
-        return true
-    } else if (charCode >= 97 && charCode <= 122) {
-        return true
-    } else if (charCode >= 128 && charCode <= 254) {
+    if ((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122)) {
         return true
     } else {
         return false
     }
 }
 
-function isVowel(chr)
+function isVowel(charCode)
 {
     /* A E I O U V
        a e i o u q */
     var vowelCodes = ["65", "69", "73", "79", "85", "86",
                        "97", "101", "105", "111", "117", "113"]; 
     for(var i=0;i<vowelCodes.length;i++){
-        if(vowelCodes[i]==chr){return true};
+        if(vowelCodes[i]==charCode){return true};
     }
     return false;
 }
 
-function isConsonent(chr)
+function isConsonent(charCode)
 {
-    if (isAlphabetical(chr) && ! isVowel(chr)){return true;}
+    if (isAlphabetical(charCode) && ! isVowel(charCode)){return true;}
     return false;
 }
 
@@ -108,13 +104,13 @@ function sayura(e)
 {
     if (!e) var e = window.event; //for IE
     var outputDiv = document.getElementById('sayuraOutput'); 
+    var newContent = document.createElement('div');
     var value = e.charCode;
 
     if (isAlphabetical(value)) {
         var chr = String.fromCharCode(value);
         buffer.push(value);
         mark++;
-        var newContent = document.createElement('div');
 
         if(isVowel(value)){
             if(buffer.length == 0 || !isAlphabetical(buffer[mark-1])){
@@ -151,18 +147,15 @@ function sayura(e)
             }
         }
 
-        while(newContent.firstChild){
-            outputDiv.appendChild(newContent.firstChild)
-        }
     } else if (e.charCode != 0){
-        var newContent = document.createElement('div');
         newContent.innerHTML = String.fromCharCode(value);
         buffer.push(String.fromCharCode(value));
         mark++;
 
-        while(newContent.firstChild){
-            outputDiv.appendChild(newContent.firstChild)
-        }
+    }
+
+    while(newContent.firstChild){
+        outputDiv.appendChild(newContent.firstChild)
     }
 }
 
