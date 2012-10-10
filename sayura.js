@@ -126,6 +126,7 @@ function sayura(e)
                 inputBox.value = inputBox.value.slice(0, -1);
                 lastChr = String.fromCharCode(vowels[chr][3]);
             } else if(value == buffer[mark-1]){
+                inputBox.value = inputBox.value.slice(0, -1);
                 lastChr = String.fromCharCode(vowels[chr][1]);
             }
 
