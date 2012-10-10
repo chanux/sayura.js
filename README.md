@@ -9,7 +9,7 @@ Annoyances (I'd hopefully fix)
 ----------
 * ~~you don't feel like you are typing in sinhala! (sinhala shows up in different div)~~
 * Currently You can't go back to a place in text and edit there.
-* Line breaks don't do anything in sinhala text.
+* ~~Line breaks don't do anything in sinhala text.~~
 * ~~Chrome refuse to render sinhala text properly.~~
 
 Demo

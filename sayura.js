@@ -2,6 +2,7 @@ var buffer = [];
 var mark = -1;
 var lastChr = "";
 
+
 consonents = {
 // key : [character, mahaprana, sanyaka]
     z : [0xda4, 0x00, 0x00],
@@ -91,7 +92,7 @@ function isConsonent(charCode)
 function cleanup(e)
 {
     if (!e) var e = window.event; //for IE
-    if (e.which != 8){
+    if (e.which != e.DOM_VK_BACK_SPACE && e.which != e.DOM_VK_RETURN){
         inputBox = document.getElementById('sayuraInput');
         inputBox.value = inputBox.value.slice(0, - 1); 
         inputBox.value += lastChr; 
