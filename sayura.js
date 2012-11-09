@@ -90,10 +90,11 @@ function isConsonent(charCode)
 
 function transform(e)
 {
-    var shiftflag = false
     if (!e) var e = window.event; //for IE
 
-    if (e.which != 8 && e.which != 13 && e.keyCode != 16){
+    if (e.which < 65 || e.which > 90) { return; }
+
+    if (!e.charCode && !e.ctrlKey){ 
         inputBox = document.getElementById('sayuraInput');
         inputBox.value = inputBox.value.slice(0, - 1); 
         inputBox.value += lastChr; 
@@ -102,13 +103,15 @@ function transform(e)
 
 function sayura(e)
 {
+    if (!e) var e = window.event; //for IE
     if (e.which == 8){
         buffer.pop();
         if (mark != -1) mark--;
         return;
     }
 
-    if (!e) var e = window.event; //for IE
+    if (e.ctrlKey) { return; }
+
     inputBox = document.getElementById('sayuraInput');
     var value = e.charCode;
 
