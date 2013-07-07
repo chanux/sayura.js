@@ -88,20 +88,20 @@ function isConsonent(charCode)
     return false;
 }
 
-function transform(e)
+function transform(e, inputBox)
 {
     if (!e) var e = window.event; //for IE
 
     if (e.which < 65 || e.which > 90) { return; }
 
     if (!e.charCode && !e.ctrlKey){ 
-        inputBox = document.getElementById('sayuraInput');
+        //inputBox = document.getElementById('sayuraInput');
         inputBox.value = inputBox.value.slice(0, - 1); 
         inputBox.value += lastChr; 
     }
 }
 
-function sayura(e)
+function sayura(e, inputBox)
 {
     if (!e) var e = window.event; //for IE
     if (e.which == 8){
@@ -112,7 +112,7 @@ function sayura(e)
 
     if (e.ctrlKey) { return; }
 
-    inputBox = document.getElementById('sayuraInput');
+    //inputBox = document.getElementById('sayuraInput');
     var value = e.charCode;
 
     if (isAlphabetical(value)) {
@@ -164,9 +164,10 @@ function sayura(e)
 
 function load()
 {
-    var input = document.getElementById("sayuraInput");
-    input.addEventListener("keypress", sayura, false);
-    input.addEventListener("keyup", transform, false);
+    var curElem = document.activeElement;
+
+    curElem.addEventListener("keypress", function(e){sayura(e, curElem)}, false);
+    curElem.addEventListener("keyup", function(e){transform(e, curElem)}, false);
 }
 
-document.addEventListener("DOMContentLoaded", load, false);
+document.addEventListener("click", load, false);
