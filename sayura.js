@@ -160,10 +160,11 @@ function sayura(e, inputBox)
 
 function load()
 {
+    var input;
     if (document.getElementById("sayuraInput")){
-        input = document.getElementById("sayuraInput")
+        input = document.getElementById("sayuraInput");
     }else{
-        var input = document.activeElement;
+        input = document.activeElement;
     }
 
     input.addEventListener("keypress", function(e){sayura(e, input)}, false);
