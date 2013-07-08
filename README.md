@@ -8,6 +8,18 @@ With sayura.js you can have the ease of [sayura](http://www.sayura.net/im/) sinh
 Annoyances (I'd hopefully fix)
 ----------
 * You can't go back to a place in text and edit there.
+* If you type fast enough sayurajs will fall behind. 
+
+How to use?
+----------
+Add sayura to your page
+Set 'sayuraInput' as the id for any input, textarea element.
+
+Or
+
+Just add sayura to your page, do nothing more and have all input, textarea elements sayurafied.
+
+Check sayura.html for an example. 
 
 Demo
 -----
