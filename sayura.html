@@ -2,7 +2,7 @@
 <head>
     <meta charset="utf-8">
     <title>Sayura.js Demo</title>
-    <script type="text/javascript" src="sayura.js"></script>
+    <script type="text/javascript" src="https://raw.github.com/chanux/sayura.js/master/sayura.js"></script>
     <style>
 	body{
 		font-family:Arial, Helvetica, sans-serif;
@@ -18,12 +18,16 @@
 		min-height:25px;
 		margin-bottom:10px;
         }
-    .footer{
+    .bodyText{
         font-size: 14px;
         color: #666;
         }
-    .footer a{
+    .bodyText a{
         color: #333;
+        }
+    .fineprint{
+        font-size: 12px;
+        color: #666;
         }
     </style>
 </head>
@@ -31,10 +35,13 @@
     <div id="wrapper">
     
     <div id="sayuraOutput"></div>
+    <p>~~~Sayura.js~~~</p>
+    <p class="bodyText">Type in the text box to have your text converted to sinhala*.</p>
     <textarea id="sayuraInput" rows="5" cols="50" type="text"></textarea>
-    <p class="footer">Need help with Sayura? Try <a href="https://docs.google.com/viewer?url=http://www.sayura.net/im/sayura.pdf" target="_blank">this</a> (Opens in google pdf viewer)</p>
-    <p class="footer">Try the experimental bookmarklet <a href="javascript:(function(){_sayura_js=document.createElement('SAYURA');_sayura_js.type='text/javascript';_sayura_js.src='https://raw.github.com/chanux/sayura.js/master/sayura.js';document.getElementsByTagName('head')[0].appendChild(_sayura_js);})();">Sayurajs</a>
-    
+    <p class="bodyText">Need help with Sayura? Try <a href="https://docs.google.com/viewer?url=http://www.sayura.net/im/sayura.pdf" target="_blank">this</a> (Opens in google pdf viewer)</p>
+    <p class="bodyText">Try the experimental bookmarklet <a href="javascript:(function(){_sayura_js=document.createElement('SCRIPT');_sayura_js.type='text/javascript';_sayura_js.src='https://raw.github.com/chanux/sayura.js/master/sayura.js';document.getElementsByTagName('head')[0].appendChild(_sayura_js);})();">Sayurajs</a>
+    <p class="bodyText">..Oh and fork me on <a href="https://github.com/chanux/sayura.js">Github</a>
+    <p class="fineprint">*You need to have a sinhala unicode font installed.</p>
     </div>
 </body>
 </html>
