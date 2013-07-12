@@ -1,4 +1,5 @@
 var buffer = [],
+    active = true,
     mark = -1,
     lastChr = "",
     consonents = {
@@ -73,7 +74,7 @@ function isVowel(charCode)
     /* A E I O U V
        a e i o u q */
     var vowelCodes = ["65", "69", "73", "79", "85", "86",
-                       "97", "101", "105", "111", "117", "113"]; 
+                      "97", "101", "105", "111", "117", "113"];
     for(var i=0;i<vowelCodes.length;i++){
         if(vowelCodes[i]==charCode){return true};
     }
@@ -89,25 +90,30 @@ function isConsonent(charCode)
 function transform(e, inputBox)
 {
     if (!e) var e = window.event; //for IE
-
-    if (e.which < 65 || e.which > 90) { return; }
-
-    if (!e.charCode && !e.ctrlKey){ 
-        inputBox.value = inputBox.value.slice(0, - 1); 
-        inputBox.value += lastChr; 
+    // When inactive, control key pressed or on
+    // keys we are not interested in, do nothing
+    if (!active || e.ctrlKey || e.which < 65 || e.which > 90) {
+        return;
     }
+
+    // We've got a workable character. Update input box
+    inputBox.value = inputBox.value.slice(0, - 1);
+    inputBox.value += lastChr;
 }
 
 function sayura(e, inputBox)
 {
     if (!e) var e = window.event; //for IE
-    if (e.which == 8){
+
+    if (!active || e.ctrlKey) {
+        // If inactive or control key pressed, do nothing
+        return;
+    } else if (e.which == 8) {
+        // Backspace. Do the monkey dance
         buffer.pop();
         if (mark != -1) mark--;
         return;
     }
-
-    if (e.ctrlKey) { return; }
 
     var value = e.charCode;
 
@@ -160,15 +166,33 @@ function sayura(e, inputBox)
 
 function load()
 {
-    var input;
+    // If inactive, do nothing
+    if (!active){ return };
+
     if (document.getElementById("sayuraInput")){
         input = document.getElementById("sayuraInput");
     }else{
         input = document.activeElement;
+        if (!(input.type == 'text' || input.type == 'textarea')){
+            return;
+        }
     }
 
     input.addEventListener("keypress", function(e){sayura(e, input)}, false);
     input.addEventListener("keyup", function(e){transform(e, input)}, false);
+}
+
+function togglestate()
+{
+    // Toggle active state
+    active = !(active);
+
+    // Reset state variables after deactivating
+    if (!active) {
+        lastChr = "";
+        buffer = [];
+        mark = -1;
+    }
 }
 
 document.addEventListener("click", load, false);
