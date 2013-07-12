@@ -24,7 +24,7 @@ Check sayura.html for an example.
 Bookmarklet
 -----------
 The bookmarklet allows you to make any input or textarea field sayura enabled.
-Also you can enable/disable sayura anytime with ctrl+e keyboard shortcut.
+Also you can enable/disable sayura anytime with escape button.
 Find the bookmarklet on demo page.
 
 Demo
