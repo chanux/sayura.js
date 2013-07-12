@@ -9,7 +9,7 @@ javascript:
 		_key_master.onload=_key_master.onreadystatechange = function(){
 			key('ctrl+e', function(){
                 //make keymaster work on input/textarea fields
-                key.filter = function(){return true;}
+                key.filter = function(){return true;};
 				window.toggleSayura();
 			});
 		};
