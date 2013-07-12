@@ -21,6 +21,12 @@ Just add sayura to your page, do nothing more and have all input, textarea eleme
 
 Check sayura.html for an example. 
 
+Bookmarklet
+-----------
+The bookmarklet allows you to make any input or textarea field sayura enabled.
+Also you can enable/disable sayura anytime with ctrl+e keyboard shortcut.
+Find the bookmarklet on demo page.
+
 Demo
 -----
 You can see Sayura.js in action [here](http://chanux.github.com/sayura.js).
