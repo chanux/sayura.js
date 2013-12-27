@@ -61,17 +61,50 @@
             V : [0xd8f, 0xd90, 0xd8f, 0xd90]
         };
 
+    var EventHandler = (function(){
+        var i = 1,
+            listeners = {};
+
+        return {
+            addListener: function(element, event, handler, capture) {
+                element.addEventListener(event, handler, capture);
+                listeners[i] = { element: element,
+                                 event: event, 
+                                 handler: handler, 
+                                 capture: capture};
+                return i++;
+            },
+            removeListener: function(id) {
+                if(id in listeners) {
+                    var h = listeners[id];
+                    h.element.removeEventListener(h.event, h.handler, h.capture);
+                }
+            },
+            removeListeners: function() {
+                for(var id in listeners) {
+                    var h = listeners[id];
+                    h.element.removeEventListener(h.event, h.handler, h.capture);
+                    i = 1;
+                }
+            }
+        };
+    }());
+
+    function reset()
+    {
+        lastChr = "";
+        buffer = [];
+        mark = -1;
+        EventHandler.removeListeners();
+    }
+
     function toggleState()
     {
         // Toggle active state
         active = !(active);
 
         // Reset state variables after deactivating
-        if (!active) {
-            lastChr = "";
-            buffer = [];
-            mark = -1;
-        }
+        if (!active) { reset; }
     }
 
     function isAlphabetical(charCode)
@@ -182,6 +215,7 @@
     {
         // If inactive, do nothing
         if (!active){ return };
+        reset();
 
         if (document.getElementById("sayuraInput")){
             input = document.getElementById("sayuraInput");
@@ -191,11 +225,13 @@
                 return;
             }
         }
-
-        input.addEventListener("keypress", function(e){sayura(e, input)}, false);
-        input.addEventListener("keyup", function(e){transform(e, input)}, false);
+        
+        EventHandler.addListener(input, 'keypress', function(e){sayura(e, input)}, false);
+        EventHandler.addListener(input, 'keyup', function(e){transform(e, input)}, false); 
     }
 
+
+    //document.addEventListener("DOMContentLoaded", load, false);
     document.addEventListener("click", load, false);
 
     global.toggleSayura = toggleState;
