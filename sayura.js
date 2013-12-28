@@ -232,6 +232,7 @@
     }
 
     document.addEventListener("click", init, false);
-    global.toggleSayura = toggleState;
+    global.sayura = init;
+    global.sayura.toggle = toggleState;
     if(typeof module !== 'undefined') module.exports = sayura;
 })(this);
