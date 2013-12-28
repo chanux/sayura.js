@@ -7,24 +7,22 @@ With sayura.js you can have the ease of [sayura](http://www.sayura.net/im/) sinh
 
 Annoyances (I'd hopefully fix)
 ----------
+* The web is full of `contenteditable` fields. Sayura doesn't work on those.
 * You can't go back to a place in text and edit there.
 * If you type fast enough sayurajs will fall behind. 
 
 How to use?
 ----------
-Add sayura to your page
-Set 'sayuraInput' as the id for any input, textarea element.
+1. Add sayura to your page.
+2. That's it. But if you need a step 2, 'click on a input, textarea field'.
 
-Or
-
-Just add sayura to your page, do nothing more and have all input, textarea elements sayurafied.
-
-Check sayura.html for an example. 
+To disable/enable sayura just call `sayura.toggle()` in event of your liking.
+Check index.html for an example.
 
 Bookmarklet
 -----------
 The bookmarklet allows you to make any input or textarea field sayura enabled.
-Also you can enable/disable sayura anytime with escape button.
+Also you can enable/disable sayura anytime with `ctrl+x` key combo.
 Find the bookmarklet on demo page.
 
 Demo
