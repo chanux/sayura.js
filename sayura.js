@@ -3,6 +3,7 @@
         active = true,
         mark = -1,
         lastChr = "",
+        stripLastTwo = false,
         consonents = {
             // key : [character, mahaprana, sanyaka]
             z : [0xda4, 0x00, 0x00],
@@ -134,7 +135,7 @@
         return false;
     }
 
-    function transform(e, inputBox)
+    function transform(e)
     {
         if (!e) var e = window.event; //for IE
         // When inactive, control key pressed or on
@@ -143,12 +144,18 @@
             return;
         }
 
-        // We've got a workable character. Update input box
-        inputBox.value = inputBox.value.slice(0, - 1);
+        // We've got a workable character. Update text
+        inputBox = document.activeElement;
+        if (stripLastTwo) {
+            inputBox.value = inputBox.value.slice(0, -2);
+            stripLastTwo = false;
+        } else {
+            inputBox.value = inputBox.value.slice(0, -1);
+        }
         inputBox.value += lastChr;
     }
 
-    function sayura(e, inputBox)
+    function sayura(e)
     {
         if (!e) var e = window.event; //for IE
 
@@ -175,21 +182,21 @@
                 } else if(isConsonent(buffer[mark-1])){
                     lastChr = String.fromCharCode(vowels[chr][2]);
                 } else if(value == buffer[mark-1] && isConsonent(buffer[mark-2])){
-                    inputBox.value = inputBox.value.slice(0, -1);
+                    stripLastTwo = true;
                     lastChr = String.fromCharCode(vowels[chr][3]);
                 } else if(value == buffer[mark-1]){
-                    inputBox.value = inputBox.value.slice(0, -1);
+                    stripLastTwo = true;
                     lastChr = String.fromCharCode(vowels[chr][1]);
                 }
 
             } else {
                 if(value == 71 && isConsonent(buffer[mark-1])){
                     //sanyaka
-                    inputBox.value = inputBox.value.slice(0, -1);
+                    stripLastTwo = true;
                     prevChar = String.fromCharCode(buffer[mark-1]);
                     lastChr = String.fromCharCode(consonents[prevChar][2]);
                 } else if((value == 72 || value == 102) && isConsonent(buffer[mark-1])){
-                    inputBox.value = inputBox.value.slice(0, -1);
+                    stripLastTwo = true;
                     //mahaprana
                     prevChar = String.fromCharCode(buffer[mark-1]);
                     lastChr = String.fromCharCode(consonents[prevChar][1]);
@@ -205,37 +212,26 @@
             }
 
         } else if (e.charCode != 0){
+            //Leaving numbers, signs etc. as it is
             lastChr = String.fromCharCode(value);
             buffer.push(String.fromCharCode(value));
             mark++;
         }
     }
 
-    function load()
+    function init()
     {
-        // If inactive, do nothing
-        if (!active){ return };
-        reset();
-
-        if (document.getElementById("sayuraInput")){
-            input = document.getElementById("sayuraInput");
-        }else{
-            input = document.activeElement;
-            if (!(input.type == 'text' || input.type == 'textarea')){
-                return;
+        if (active){
+            reset(); //For changing between multiple input areas
+            var input = document.activeElement;
+            if (input.type == 'text' || input.type == 'textarea' || input.getAttribute('role') == 'textbox'){
+                EventHandler.addListener(input, 'keypress', function(e){sayura(e)}, false);
+                EventHandler.addListener(input, 'keyup', function(e){transform(e)}, false); 
             }
-        }
-        
-        EventHandler.addListener(input, 'keypress', function(e){sayura(e, input)}, false);
-        EventHandler.addListener(input, 'keyup', function(e){transform(e, input)}, false); 
+        };
     }
 
-
-    //document.addEventListener("DOMContentLoaded", load, false);
-    document.addEventListener("click", load, false);
-
+    document.addEventListener("click", init, false);
     global.toggleSayura = toggleState;
-
     if(typeof module !== 'undefined') module.exports = sayura;
-
 })(this);
