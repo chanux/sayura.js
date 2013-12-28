@@ -17,7 +17,7 @@ javascript:
 		document.getElementsByTagName('head')[0].appendChild(_key_master);
 	};
 
-	if(window.toggleSayura === undefined){
+	if(window.sayura === undefined){
 		_sayura_js=document.createElement('script');
 		_sayura_js.type='text/javascript';
 		_sayura_js.src='https://raw.github.com/chanux/sayura.js/master/sayura.js';
