@@ -9,6 +9,10 @@ javascript:
 		_sayura_js=document.createElement('script');
 		_sayura_js.type='text/javascript';
 		_sayura_js.src='https://raw.github.com/chanux/sayura.js/master/sayura.js';
+        _sayura_js.onload=_sayura_js.onreadystatechange = function(){
+            // Initiate sayura
+            sayura();
+		};
 		document.getElementsByTagName('head')[0].appendChild(_sayura_js);
     };
     if (window.key === undefined){
