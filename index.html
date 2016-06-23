@@ -11,13 +11,6 @@
 		width:425px;
 		margin:0 auto;
 		}
-	#sayuraInput{
-		margin-bottom:20px;
-		}
-	#sayuraOutput{
-		min-height:25px;
-		margin-bottom:10px;
-        }
     .bodyText{
         font-size: 14px;
         color: #666;
@@ -29,21 +22,56 @@
         font-size: 12px;
         color: #666;
         }
+
+	#ta{
+		margin-bottom:20px;
+        width: 400px;
+        height: 100px;
+		}
+    #ce {
+		margin-bottom:20px;
+        -moz-appearance: textfield-multiline;
+        -webkit-appearance: textarea;
+        border: 1px solid gray;
+        font: -webkit-small-control;
+        font: medium -moz-fixed;
+        height: 100px;
+        overflow: auto;
+        padding: 2px;
+        resize: both;
+        width: 400px;
+    }
+    #it {
+        font: medium -moz-fixed;
+        font: -webkit-small-control;
+        border: 1px solid gray;
+        width: 400px;
+		margin-bottom:20px;
+    }
     </style>
 </head>
 <body>
     <div id="wrapper">
     
-    <div id="sayuraOutput"></div>
     <p>~~~Sayura.js~~~</p>
     <p class="bodyText">Type in the text box to have your text converted to sinhala*.</p>
-    <textarea rows="5" cols="50" type="text"></textarea>
-    <button onclick="sayura.toggle();">Disable</button>
+    Textarea:
+    <textarea id="ta" type="text"></textarea>
+    Contenteditable:
+    <div id="ce" role="textarea" contenteditable="true"></div>
+    Text input:
+    <input id="it" type="text">
+    <button id="sayuraToggle" onclick="sayura.toggle();toggleButtonText(this);">Disable Sayura</button>
     <p class="bodyText">Need help with Sayura? Try <a href="https://docs.google.com/viewer?url=http://www.sayura.net/im/sayura.pdf" target="_blank">this</a> (Opens in google pdf viewer)</p>
     <p class="bodyText">Try the experimental bookmarklet** <a href="javascript:(function(){javascript:(function(){if(window.key===undefined){_key_master=document.createElement('script');_key_master.type='text/javascript';_key_master.src='http://cdnjs.cloudflare.com/ajax/libs/keymaster/1.6.1/keymaster.js';_key_master.onload=_key_master.onreadystatechange=function(){key.filter=function(){return%20true;};key('ctrl+x',function(){window.sayura();});};document.getElementsByTagName('head')[0].appendChild(_key_master);};if(window.toggleSayura===undefined){_sayura_js=document.createElement('script');_sayura_js.type='text/javascript';_sayura_js.src='https://raw.github.com/chanux/sayura.js/master/sayura.js';document.getElementsByTagName('head')[0].appendChild(_sayura_js);};})();})();">Sayurajs</a>
     <p class="bodyText">..Oh and fork me on <a href="https://github.com/chanux/sayura.js">Github</a>
     <p class="fineprint">*You need to have a sinhala unicode font installed.</p>
     <p class="fineprint">**Load the bookmarklet and press ctrl+x to activate/deactivate sayura.</p>    
     </div>
+    <script type="text/javascript">
+        function toggleButtonText(el){
+            el.innerHTML = (el.innerHTML) == "Disable Sayura" ? "Enable Sayura" : "Disable Sayura";
+        }
+    </script>
 </body>
 </html>
