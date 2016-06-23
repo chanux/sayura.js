@@ -62,41 +62,11 @@
             V : [0xd8f, 0xd90, 0xd8f, 0xd90]
         };
 
-    var EventHandler = (function(){
-        var i = 1,
-            listeners = {};
-
-        return {
-            addListener: function(element, event, handler, capture) {
-                element.addEventListener(event, handler, capture);
-                listeners[i] = { element: element,
-                                 event: event, 
-                                 handler: handler, 
-                                 capture: capture};
-                return i++;
-            },
-            removeListener: function(id) {
-                if(id in listeners) {
-                    var h = listeners[id];
-                    h.element.removeEventListener(h.event, h.handler, h.capture);
-                }
-            },
-            removeListeners: function() {
-                for(var id in listeners) {
-                    var h = listeners[id];
-                    h.element.removeEventListener(h.event, h.handler, h.capture);
-                    i = 1;
-                }
-            }
-        };
-    }());
-
     function reset()
     {
         lastChr = "";
         buffer = [];
         mark = -1;
-        EventHandler.removeListeners();
     }
 
     function toggleState()
@@ -135,6 +105,41 @@
         return false;
     }
 
+    function transformContenteditableField(value, stripCount) {
+        /**
+         * Append character to textContent in conetnteditable field
+         * currently being edited
+         * credit:
+         *  http://stackoverflow.com/a/2943242/96100
+         *  http://stackoverflow.com/a/19997193/118872
+         */
+        var sel, range, textNode;
+        if (window.getSelection) {
+            sel = window.getSelection();
+            if (sel.getRangeAt && sel.rangeCount) {
+                range = sel.getRangeAt(0);
+            }
+        } else if ((sel = document.selection) && sel.type != "Control") {
+            // For IE < 9
+            // Note: Not tested. Not complete
+            range = sel.createRange();
+        }
+        clone = range.cloneRange();
+
+        clone.setStart(range.startContainer, range.startOffset - stripCount);
+        clone.setEnd(range.startContainer, range.startOffset);
+        clone.deleteContents();
+
+        textNode = document.createTextNode(value);
+        range.insertNode(textNode);
+        // Move caret to the end of the newly inserted text node
+        range.setStart(textNode, textNode.length);
+        range.setEnd(textNode, textNode.length);
+
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
+
     function transform(e)
     {
         if (!e) var e = window.event; //for IE
@@ -144,15 +149,18 @@
             return;
         }
 
+        stripCount = stripLastTwo ? 2 : 1;
         // We've got a workable character. Update text
         inputBox = document.activeElement;
-        if (stripLastTwo) {
-            inputBox.value = inputBox.value.slice(0, -2);
-            stripLastTwo = false;
+        if (inputBox.value) {
+            inputBox.value = inputBox.value.slice(0, stripCount * -1) + lastChr;
         } else {
-            inputBox.value = inputBox.value.slice(0, -1);
+            transformContenteditableField(lastChr, stripCount);
+			// Join all text nodes. Required in Chrome
+			inputBox.normalize();
         }
-        inputBox.value += lastChr;
+
+        stripLastTwo = false;
     }
 
     function sayura(e)
@@ -222,16 +230,20 @@
     function init()
     {
         if (active){
-            reset(); //For changing between multiple input areas
-            var input = document.activeElement;
-            if (input.type == 'text' || input.type == 'textarea' || input.getAttribute('role') == 'textbox'){
-                EventHandler.addListener(input, 'keypress', function(e){sayura(e)}, false);
-                EventHandler.addListener(input, 'keyup', function(e){transform(e)}, false); 
+            var nodes = document.querySelectorAll("textarea, input[type=text], [contenteditable]");
+            len = nodes.length;
+
+            if (len) {
+                while (len--){
+                    nodes[len].addEventListener('keypress', function(e){sayura(e)}, false);
+                    nodes[len].addEventListener('keyup', function(e){transform(e)}, false);
+                    nodes[len].addEventListener('focus', function(){reset()}, false);
+                }
             }
         };
     }
 
-    document.addEventListener("click", init, false);
+    document.addEventListener("DOMContentLoaded", init, false);
     global.sayura = init;
     global.sayura.toggle = toggleState;
     if(typeof module !== 'undefined') module.exports = sayura;
