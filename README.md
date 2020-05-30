@@ -7,9 +7,9 @@ With sayura.js you can have the ease of [sayura](http://www.sayura.net/im/) sinh
 
 Annoyances (I'd hopefully fix)
 ----------
-* The web is full of `contenteditable` fields. Sayura doesn't work on those.
-* You can't go back to a place in text and edit there.
-* If you type fast enough sayurajs will fall behind. 
+- [ ] You can't go back to a place in text and edit there.
+- [ ] If you type fast enough sayurajs will fall behind. 
+- [x] The web is full of `contenteditable` fields. Sayura doesn't work on those.
 
 How to use?
 ----------
