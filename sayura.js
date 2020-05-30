@@ -254,7 +254,7 @@
 
             if (len) {
                 while (len--){
-                    nodes[len].addEventListener('keypress', function(e){sayura(e)}, false);
+                    nodes[len].addEventListener('keydown', function(e){sayura(e)}, false);
                     nodes[len].addEventListener('keyup', function(e){transform(e)}, false);
                     nodes[len].addEventListener('focus', function(){reset()}, false);
                 }
