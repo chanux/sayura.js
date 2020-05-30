@@ -261,7 +261,12 @@
         }
         if (e.data  == " ")
         {
+            // on space, e.data resets
             prevLen = 0;
+            buffer.push(" ");
+            lastChr = " ";
+            mark++;
+            return;
         } else if (e.data.length < prevLen) {
             // Backspace. Do the monkey dance
             // works with keydown, not keypress
