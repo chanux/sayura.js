@@ -78,30 +78,44 @@
         if (!active) { reset; }
     }
 
-    function isAlphabetical(charCode)
+    function isAlphabetical(character)
     {
-        if ((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122)) {
-            return true
-        } else {
-            return false
-        }
-    }
-
-    function isVowel(charCode)
-    {
-        /* A E I O U V
-           a e i o u q */
-        var vowelCodes = ["65", "69", "73", "79", "85", "86",
-                          "97", "101", "105", "111", "117", "113"];
-        for(var i=0;i<vowelCodes.length;i++){
-            if(vowelCodes[i]==charCode){return true};
+        var alph = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+                    'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
+                    'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+                    'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
+                    'W', 'X', 'Y', 'Z']
+        for(var i=0;i<alph.length;i++){
+            if(alph[i] == character){return true;}
         }
         return false;
     }
 
-    function isConsonent(charCode)
+    function isNonAlphaPrintable(character)
     {
-        if (isAlphabetical(charCode) && ! isVowel(charCode)){return true;}
+        var nap = ['!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',',
+                    '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8',
+                    '9', ':', ';', '<', '=', '>', '?', '@', '`', '|', '}', '~',
+                    '[', "]", '^', '_', '\\', '\{', ' ']
+
+        for(var i=0;i<nap.length;i++){
+            if(nap[i] == character){return true;}
+        }
+        return false;
+    }
+
+    function isVowel(character)
+    {
+        var vowels = ['a', 'A', 'e', 'E', 'i', 'I', 'o', 'O', 'u', 'q', 'V']
+        for(var i=0;i<vowels.length;i++){
+            if(vowels[i]==character){return true};
+        }
+        return false;
+    }
+
+    function isConsonent(character)
+    {
+        if (isAlphabetical(character) && ! isVowel(character)){return true;}
         return false;
     }
 
@@ -172,57 +186,62 @@
             return;
         } else if (e.which == 8) {
             // Backspace. Do the monkey dance
+            // works with keydown, not keypress
             buffer.pop();
             if (mark != -1) mark--;
             return;
         }
 
-        var value = e.charCode;
+        var chr = e.key
 
-        if (isAlphabetical(value)) {
-            var chr = String.fromCharCode(value);
-            buffer.push(value);
+        if (isAlphabetical(chr)) {
+            buffer.push(chr);
             mark++;
 
-            if(isVowel(value)){
+            if(isVowel(chr)){
                 if(buffer.length == 0 || !isAlphabetical(buffer[mark-1])){
+                    // A vowel that is the very first character or first after
+                    // a non-alphabetical charatcer (space) is primary form.
                     lastChr = String.fromCharCode(vowels[chr][0]);
                 } else if(isConsonent(buffer[mark-1])){
+                    // if character before was a consonent, this is a 'pilla'
                     lastChr = String.fromCharCode(vowels[chr][2]);
-                } else if(value == buffer[mark-1] && isConsonent(buffer[mark-2])){
+                } else if(chr == buffer[mark-1] && isConsonent(buffer[mark-2])){
+                    // repeating vowel after consonent is a double 'pilla'
                     stripLastTwo = true;
                     lastChr = String.fromCharCode(vowels[chr][3]);
-                } else if(value == buffer[mark-1]){
+                } else if(chr == buffer[mark-1]){
+                    // repeating vowels without a consonent before them is it's
+                    // long form
                     stripLastTwo = true;
                     lastChr = String.fromCharCode(vowels[chr][1]);
                 }
-
             } else {
-                if(value == 71 && isConsonent(buffer[mark-1])){
+                if(chr == 'G' && isConsonent(buffer[mark-1])){
                     //sanyaka
                     stripLastTwo = true;
-                    prevChar = String.fromCharCode(buffer[mark-1]);
+                    prevChar = buffer[mark-1];
                     lastChr = String.fromCharCode(consonents[prevChar][2]);
-                } else if((value == 72 || value == 102) && isConsonent(buffer[mark-1])){
+                } else if((chr == 'H' || chr == 'f') && isConsonent(buffer[mark-1])){
                     stripLastTwo = true;
                     //mahaprana
-                    prevChar = String.fromCharCode(buffer[mark-1]);
+                    prevChar = buffer[mark-1];
                     lastChr = String.fromCharCode(consonents[prevChar][1]);
-                } else if((value == 82 || value == 89) && isConsonent(buffer[mark-1])){
+                } else if((chr == 'R' || chr == 'Y') && isConsonent(buffer[mark-1])){
                     //add al-kirima, zero width joiner and r/y for rakaransaya/yansaya
                     lastChr = String.fromCharCode(0xdca, 0x200d, consonents[chr][0]);
-                } else if(value == 87 && isConsonent(buffer[mark-1])){
+                } else if(chr == 'W' && isConsonent(buffer[mark-1])){
                     //zero width joiner, al-kirima for bandi-akuru
                     lastChr = String.fromCharCode(0x200d, 0xdca);
                 } else {
                     lastChr = String.fromCharCode(consonents[chr][0]);
                 }
             }
-
-        } else if (e.charCode != 0){
-            //Leaving numbers, signs etc. as it is
-            lastChr = String.fromCharCode(value);
-            buffer.push(String.fromCharCode(value));
+        } else if (isNonAlphaPrintable(chr)) {
+            // Leaving printable non-alphabetic characters (numbers, signs
+            // etc.) as it is
+            lastChr = chr;
+            buffer.push(chr);
             mark++;
         }
     }
