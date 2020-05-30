@@ -4,6 +4,7 @@
         mark = -1,
         lastChr = "",
         stripLastTwo = false,
+        prevLen = 0,
         consonents = {
             // key : [character, mahaprana, sanyaka]
             z : [0xda4, 0x00, 0x00],
@@ -246,17 +247,118 @@
         }
     }
 
+    function main(e) {
+        if (!e) var e = window.event; //for IE
+
+        if (e.data == null){
+            // There are input events with null values
+            // not interested in those
+            return;
+        }
+        if (e.data.length == prevLen) {
+            // bogus event? Ex: Firefox does duplicate triggers.
+            return;
+        }
+        if (e.data  == " ")
+        {
+            prevLen = 0;
+        } else if (e.data.length < prevLen) {
+            // Backspace. Do the monkey dance
+            // works with keydown, not keypress
+            buffer.pop();
+            if (mark != -1) mark--;
+            return;
+        }
+        prevLen = e.data.length
+
+        var chr = e.data.slice(-1)
+
+        if (isAlphabetical(chr)) {
+            buffer.push(chr);
+            mark++;
+
+            if(isVowel(chr)){
+                if(buffer.length == 0 || !isAlphabetical(buffer[mark-1])){
+                    // A vowel that is the very first character or first after
+                    // a non-alphabetical charatcer (space) is primary form.
+                    lastChr = String.fromCharCode(vowels[chr][0]);
+                } else if(isConsonent(buffer[mark-1])){
+                    // if character before was a consonent, this is a 'pilla'
+                    lastChr = String.fromCharCode(vowels[chr][2]);
+                } else if(chr == buffer[mark-1] && isConsonent(buffer[mark-2])){
+                    // repeating vowel after consonent is a double 'pilla'
+                    stripLastTwo = true;
+                    lastChr = String.fromCharCode(vowels[chr][3]);
+                } else if(chr == buffer[mark-1]){
+                    // repeating vowels without a consonent before them is it's
+                    // long form
+                    stripLastTwo = true;
+                    lastChr = String.fromCharCode(vowels[chr][1]);
+                }
+            } else {
+                if(chr == 'G' && isConsonent(buffer[mark-1])){
+                    //sanyaka
+                    stripLastTwo = true;
+                    prevChar = buffer[mark-1];
+                    lastChr = String.fromCharCode(consonents[prevChar][2]);
+                } else if((chr == 'H' || chr == 'f') && isConsonent(buffer[mark-1])){
+                    stripLastTwo = true;
+                    //mahaprana
+                    prevChar = buffer[mark-1];
+                    lastChr = String.fromCharCode(consonents[prevChar][1]);
+                } else if((chr == 'R' || chr == 'Y') && isConsonent(buffer[mark-1])){
+                    //add al-kirima, zero width joiner and r/y for rakaransaya/yansaya
+                    lastChr = String.fromCharCode(0xdca, 0x200d, consonents[chr][0]);
+                } else if(chr == 'W' && isConsonent(buffer[mark-1])){
+                    //zero width joiner, al-kirima for bandi-akuru
+                    lastChr = String.fromCharCode(0x200d, 0xdca);
+                } else {
+                    lastChr = String.fromCharCode(consonents[chr][0]);
+                }
+            }
+        } else if (isNonAlphaPrintable(chr)) {
+            // Leaving printable non-alphabetic characters (numbers, signs
+            // etc.) as it is
+            lastChr = chr;
+            buffer.push(chr);
+            mark++;
+        }
+
+        // Transform
+        stripCount = stripLastTwo ? 2 : 1;
+        // We've got a workable character. Update text
+        inputBox = document.activeElement;
+        if (inputBox.value) {
+            inputBox.value = inputBox.value.slice(0, stripCount * -1) + lastChr;
+        } else {
+            transformContenteditableField(lastChr, stripCount);
+			// Join all text nodes. Required in Chrome
+			inputBox.normalize();
+        }
+
+        stripLastTwo = false;
+    }
+
     function init()
     {
         if (active){
             var nodes = document.querySelectorAll("textarea, input[type=text], [contenteditable]");
             len = nodes.length;
 
-            if (len) {
-                while (len--){
-                    nodes[len].addEventListener('keydown', function(e){sayura(e)}, false);
-                    nodes[len].addEventListener('keyup', function(e){transform(e)}, false);
-                    nodes[len].addEventListener('focus', function(){reset()}, false);
+            if (window.navigator.userAgent.indexOf('Android') > -1) {
+                // If Android, use input event
+                if (len) {
+                    while (len--){
+                        nodes[len].addEventListener('input', main);
+                    }
+                }
+            } else {
+                if (len) {
+                    while (len--){
+                        nodes[len].addEventListener('keydown', function(e){sayura(e)}, false);
+                        nodes[len].addEventListener('keyup', function(e){transform(e)}, false);
+                        nodes[len].addEventListener('focus', function(){reset()}, false);
+                    }
                 }
             }
         };
