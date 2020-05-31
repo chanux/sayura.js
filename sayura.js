@@ -1,6 +1,6 @@
 ;(function(global){
-    var buffer = [],
-        active = true,
+    var active = true,
+        buffer = [],
         mark = -1,
         lastChr = "",
         stripLastTwo = false,
@@ -250,15 +250,6 @@
     function main(e) {
         if (!e) var e = window.event; //for IE
 
-        if (e.data == null){
-            // There are input events with null values
-            // not interested in those
-            return;
-        }
-        if (e.data.length == prevLen) {
-            // bogus event? Ex: Firefox does duplicate triggers.
-            return;
-        }
         if (e.data  == " ")
         {
             // on space, e.data resets
@@ -267,7 +258,7 @@
             lastChr = " ";
             mark++;
             return;
-        } else if (e.data.length < prevLen) {
+        } else if (e.inputType == 'deleteContentBackward') {
             // Backspace. Do the monkey dance
             // works with keydown, not keypress
             buffer.pop();
