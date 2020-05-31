@@ -5,6 +5,8 @@
         lastChr = "",
         stripLastTwo = false,
         prevLen = 0,
+        dedupeState = false;
+        dupeBSpace = false;
         consonents = {
             // key : [character, mahaprana, sanyaka]
             z : [0xda4, 0x00, 0x00],
@@ -326,6 +328,8 @@
         inputBox = document.activeElement;
         if (inputBox.value) {
             inputBox.value = inputBox.value.slice(0, stripCount * -1) + lastChr;
+            // Needed for Firexfox on Android dedupe
+            dupeBSpace = true;
         } else {
             transformContenteditableField(lastChr, stripCount);
 			// Join all text nodes. Required in Chrome
@@ -335,26 +339,54 @@
         stripLastTwo = false;
     }
 
+    /**
+     * Firefox on Android emits input event for soft updates of text.
+     * Just need to dedupe the events generated for Sayura's own
+     * manipulations.
+     */
+    function dedupe(e)
+    {
+        if (e.data != null && isAlphabetical(e.data.slice(-1))){
+            if (dedupeState){
+                console.log('duplicate')
+                dedupeState = false;
+            } else {
+                console.log('not duplicate')
+                dedupeState = true;
+                main(e)
+            }
+        } else if (dupeBSpace && e.inputType == 'deleteContentBackward'){
+            dupeBSpace = false;
+        } else {
+            console.log('nonalpha')
+            main(e)
+        }
+    }
+
     function init()
     {
         if (active){
-            var nodes = document.querySelectorAll("textarea, input[type=text], [contenteditable]");
-            len = nodes.length;
+            nodes = document.querySelectorAll("textarea, input[type=text], [contenteditable]");
+            nodeCount = nodes.length;
+            if (nodeCount <= 0){return;}
 
             if (window.navigator.userAgent.indexOf('Android') > -1) {
                 // If Android, use input event
-                if (len) {
-                    while (len--){
-                        nodes[len].addEventListener('input', main);
+                if (window.navigator.userAgent.indexOf("Firefox") > -1) {
+                    console.log('Firefox')
+                    while (nodeCount--){
+                        nodes[nodeCount].addEventListener('input', dedupe);
+                    }
+                } else {
+                    while (nodeCount--){
+                        nodes[nodeCount].addEventListener('input', main);
                     }
                 }
             } else {
-                if (len) {
-                    while (len--){
-                        nodes[len].addEventListener('keydown', function(e){sayura(e)}, false);
-                        nodes[len].addEventListener('keyup', function(e){transform(e)}, false);
-                        nodes[len].addEventListener('focus', function(){reset()}, false);
-                    }
+                while (nodeCount--){
+                    nodes[nodeCount].addEventListener('keydown', function(e){sayura(e)}, false);
+                    nodes[nodeCount].addEventListener('keyup', function(e){transform(e)}, false);
+                    nodes[nodeCount].addEventListener('focus', function(){reset()}, false);
                 }
             }
         };
