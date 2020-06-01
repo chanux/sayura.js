@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="Description" content="A Javascript implementation of Sayura quasi-transliteration scheme for Sinhala script.">
+    <link rel="manifest" href="manifest.webmanifest">
+    <title>Sayura.js Demo</title>
+    <script type="text/javascript" src="sayura.js"></script>
+    <style>
+	body{
+		font-family:Arial, Helvetica, sans-serif;
+		}
+    #wrapper{
+		width:425px;
+		margin:0 auto;
+		}
+    h1{
+        font-size: 20px;
+    }
+    .bodyText{
+        font-size: 14px;
+        color: #666;
+        }
+    .bodyText a{
+        color: #333;
+        }
+    .fineprint{
+        font-size: 12px;
+        color: #666;
+        }
+
+	#ta{
+		margin-bottom:20px;
+        width: 400px;
+        height: 100px;
+		}
+    #ce {
+		margin-bottom:20px;
+        -moz-appearance: textfield-multiline;
+        -webkit-appearance: textarea;
+        border: 1px solid gray;
+        font: -webkit-small-control;
+        font: medium -moz-fixed;
+        height: 100px;
+        overflow: auto;
+        padding: 2px;
+        resize: both;
+        width: 400px;
+    }
+    #it {
+        font: medium -moz-fixed;
+        font: -webkit-small-control;
+        border: 1px solid gray;
+        width: 400px;
+		margin-bottom:20px;
+    }
+    .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 0;
+        background: #000000;
+        color: white;
+        padding: 8px;
+        z-index: 100;
+    }
+
+    .skip-link:focus {
+        top: 0;
+    }
+    </style>
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to main</a>
+    <div id="wrapper">
+    <h1>~~~Sayura.js~~~</h1>
+    <p class="bodyText">Type in the text box to have your text converted to sinhala*.</p>
+    <main id="main">
+        <label>
+            Write Here:
+            <textarea id="ta" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+        </label>
+    </main>
+    <button id="sayuraToggle" onclick="sayura.toggle();toggleButtonText(this);">Disable Sayura</button>
+    <p class="bodyText"><a href="https://docs.google.com/viewer?url=http://www.sayura.net/im/sayura.pdf" target="_blank" rel="noopener" >Sayura typing guide by Anuradha</a></p>
+    </div>
+    <script type="text/javascript">
+        function toggleButtonText(el){
+            el.innerHTML = (el.innerHTML) == "Disable Sayura" ? "Enable Sayura" : "Disable Sayura";
+        }
+
+      if('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          .then(function(registration) {
+                console.log('Service Worker Registered');
+          });
+
+        navigator.serviceWorker.ready.then(function(registration) {
+           console.log('Service Worker Ready');
+        });
+      }
+    </script>
+</body>
+</html>
