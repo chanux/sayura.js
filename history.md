@@ -1,4 +1,9 @@
-0.2.0 / 2016-06-23
+0.3.0 / 2020-06-01
+==================
+
+ * Switches to using input event instead of keydown (Fixes issues on Android) 
+
+0.2.0 / 2020-05-30
 ==================
 
  * Drops deprecated keypress for keydown event
