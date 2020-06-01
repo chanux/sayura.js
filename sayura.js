@@ -256,17 +256,14 @@
     {
         if (e.data != null && isAlphabetical(e.data.slice(-1))){
             if (dedupeState){
-                console.log('duplicate')
                 dedupeState = false;
             } else {
-                console.log('not duplicate')
                 dedupeState = true;
                 main(e)
             }
         } else if (dupeBSpace && e.inputType == 'deleteContentBackward'){
             dupeBSpace = false;
         } else {
-            console.log('nonalpha')
             main(e)
         }
     }
@@ -279,16 +276,16 @@
             ua = window.navigator.userAgent
             if (nodeCount <= 0){return;}
 
-            if (ua.indexOf('Android') > -1 && ua.indexOf("Firefox")) {
+            if (ua.indexOf('Android') > -1 && ua.indexOf("Firefox") > -1) {
                 while (nodeCount--){
                     nodes[nodeCount].addEventListener('input', dedupe);
                     nodes[nodeCount].addEventListener('focus', function(){reset()}, false);
                 }
-            }
-
-            while (nodeCount--){
-                nodes[nodeCount].addEventListener('input', main);
-                nodes[nodeCount].addEventListener('focus', function(){reset()}, false);
+            } else {
+                while (nodeCount--){
+                    nodes[nodeCount].addEventListener('input', main);
+                    nodes[nodeCount].addEventListener('focus', function(){reset()}, false);
+                }
             }
         };
     }
