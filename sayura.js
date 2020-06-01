@@ -157,98 +157,6 @@
         sel.addRange(range);
     }
 
-    function transform(e)
-    {
-        if (!e) var e = window.event; //for IE
-        // When inactive, control key pressed or on
-        // keys we are not interested in, do nothing
-        if (!active || e.ctrlKey || e.which < 65 || e.which > 90) {
-            return;
-        }
-
-        stripCount = stripLastTwo ? 2 : 1;
-        // We've got a workable character. Update text
-        inputBox = document.activeElement;
-        if (inputBox.value) {
-            inputBox.value = inputBox.value.slice(0, stripCount * -1) + lastChr;
-        } else {
-            transformContenteditableField(lastChr, stripCount);
-			// Join all text nodes. Required in Chrome
-			inputBox.normalize();
-        }
-
-        stripLastTwo = false;
-    }
-
-    function sayura(e)
-    {
-        if (!e) var e = window.event; //for IE
-
-        if (!active || e.ctrlKey) {
-            // If inactive or control key pressed, do nothing
-            return;
-        } else if (e.which == 8) {
-            // Backspace. Do the monkey dance
-            // works with keydown, not keypress
-            buffer.pop();
-            if (mark != -1) mark--;
-            return;
-        }
-
-        var chr = e.key
-
-        if (isAlphabetical(chr)) {
-            buffer.push(chr);
-            mark++;
-
-            if(isVowel(chr)){
-                if(buffer.length == 0 || !isAlphabetical(buffer[mark-1])){
-                    // A vowel that is the very first character or first after
-                    // a non-alphabetical charatcer (space) is primary form.
-                    lastChr = String.fromCharCode(vowels[chr][0]);
-                } else if(isConsonent(buffer[mark-1])){
-                    // if character before was a consonent, this is a 'pilla'
-                    lastChr = String.fromCharCode(vowels[chr][2]);
-                } else if(chr == buffer[mark-1] && isConsonent(buffer[mark-2])){
-                    // repeating vowel after consonent is a double 'pilla'
-                    stripLastTwo = true;
-                    lastChr = String.fromCharCode(vowels[chr][3]);
-                } else if(chr == buffer[mark-1]){
-                    // repeating vowels without a consonent before them is it's
-                    // long form
-                    stripLastTwo = true;
-                    lastChr = String.fromCharCode(vowels[chr][1]);
-                }
-            } else {
-                if(chr == 'G' && isConsonent(buffer[mark-1])){
-                    //sanyaka
-                    stripLastTwo = true;
-                    prevChar = buffer[mark-1];
-                    lastChr = String.fromCharCode(consonents[prevChar][2]);
-                } else if((chr == 'H' || chr == 'f') && isConsonent(buffer[mark-1])){
-                    stripLastTwo = true;
-                    //mahaprana
-                    prevChar = buffer[mark-1];
-                    lastChr = String.fromCharCode(consonents[prevChar][1]);
-                } else if((chr == 'R' || chr == 'Y') && isConsonent(buffer[mark-1])){
-                    //add al-kirima, zero width joiner and r/y for rakaransaya/yansaya
-                    lastChr = String.fromCharCode(0xdca, 0x200d, consonents[chr][0]);
-                } else if(chr == 'W' && isConsonent(buffer[mark-1])){
-                    //zero width joiner, al-kirima for bandi-akuru
-                    lastChr = String.fromCharCode(0x200d, 0xdca);
-                } else {
-                    lastChr = String.fromCharCode(consonents[chr][0]);
-                }
-            }
-        } else if (isNonAlphaPrintable(chr)) {
-            // Leaving printable non-alphabetic characters (numbers, signs
-            // etc.) as it is
-            lastChr = chr;
-            buffer.push(chr);
-            mark++;
-        }
-    }
-
     function main(e) {
         if (!e) var e = window.event; //for IE
 
@@ -368,26 +276,19 @@
         if (active){
             nodes = document.querySelectorAll("textarea, input[type=text], [contenteditable]");
             nodeCount = nodes.length;
+            ua = window.navigator.userAgent
             if (nodeCount <= 0){return;}
 
-            if (window.navigator.userAgent.indexOf('Android') > -1) {
-                // If Android, use input event
-                if (window.navigator.userAgent.indexOf("Firefox") > -1) {
-                    console.log('Firefox')
-                    while (nodeCount--){
-                        nodes[nodeCount].addEventListener('input', dedupe);
-                    }
-                } else {
-                    while (nodeCount--){
-                        nodes[nodeCount].addEventListener('input', main);
-                    }
-                }
-            } else {
+            if (ua.indexOf('Android') > -1 && ua.indexOf("Firefox")) {
                 while (nodeCount--){
-                    nodes[nodeCount].addEventListener('keydown', function(e){sayura(e)}, false);
-                    nodes[nodeCount].addEventListener('keyup', function(e){transform(e)}, false);
+                    nodes[nodeCount].addEventListener('input', dedupe);
                     nodes[nodeCount].addEventListener('focus', function(){reset()}, false);
                 }
+            }
+
+            while (nodeCount--){
+                nodes[nodeCount].addEventListener('input', main);
+                nodes[nodeCount].addEventListener('focus', function(){reset()}, false);
             }
         };
     }
