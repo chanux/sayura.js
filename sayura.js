@@ -81,6 +81,16 @@
         if (!active) { reset; }
     }
 
+    function clearText(el)
+    {
+        if (el.value) {
+            el.value = "";
+        } else {
+            transformContenteditableField("", 0);
+        }
+        reset();
+    }
+
     function isAlphabetical(character)
     {
         var alph = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
@@ -143,7 +153,12 @@
         }
         clone = range.cloneRange();
 
-        clone.setStart(range.startContainer, range.startOffset - stripCount);
+        if (stripCount > 0) {
+            clone.setStart(range.startContainer, range.startOffset - stripCount);
+        } else {
+            // Clear all if stripCount is not positive
+            clone.setStart(range.startContainer, 0);
+        }
         clone.setEnd(range.startContainer, range.startOffset);
         clone.deleteContents();
 
@@ -291,5 +306,6 @@
     document.addEventListener("DOMContentLoaded", init, false);
     global.sayura = init;
     global.sayura.toggle = toggleState;
+    global.sayura.clear = clearText;
     if(typeof module !== 'undefined') module.exports = sayura;
 })(this);
