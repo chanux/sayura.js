@@ -7,7 +7,8 @@ self.addEventListener('install', e => {
         `/`,
         `/index.html`,
         `/favicon.ico`,
-        `/sayura.min.js`
+        `/sayura.min.js`,
+        `/sw.js`
       ])
           .then(() => self.skipWaiting());
     })
