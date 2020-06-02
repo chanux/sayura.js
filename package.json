@@ -1,0 +1,16 @@
+{
+  "name": "sayura.js",
+  "version": "0.3.0",
+  "main": "index.js",
+  "repository": "git@github.com:chanux/sayura.js.git",
+  "author": "chanux <chanux@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "esbuild": "^0.4.3"
+  },
+  "scripts": {
+    "build": "esbuild sayura.js --minify --outfile=app/sayura.min.js;cp favicon.ico app/",
+    "postinstall": "cp favicon.ico app/"
+  }
+}
