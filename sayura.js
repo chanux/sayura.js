@@ -158,6 +158,7 @@
     }
 
     function main(e) {
+        if (!active) {return;}
         if (!e) var e = window.event; //for IE
 
         if (e.data  == " ")
@@ -170,7 +171,6 @@
             return;
         } else if (e.inputType == 'deleteContentBackward') {
             // Backspace. Do the monkey dance
-            // works with keydown, not keypress
             buffer.pop();
             if (mark != -1) mark--;
             return;
@@ -270,24 +270,22 @@
 
     function init()
     {
-        if (active){
-            nodes = document.querySelectorAll("textarea, input[type=text], [contenteditable]");
-            nodeCount = nodes.length;
-            ua = window.navigator.userAgent
-            if (nodeCount <= 0){return;}
+        nodes = document.querySelectorAll("textarea, input[type=text], [contenteditable]");
+        nodeCount = nodes.length;
+        ua = window.navigator.userAgent
+        if (nodeCount <= 0){return;}
 
-            if (ua.indexOf('Android') > -1 && ua.indexOf("Firefox") > -1) {
-                while (nodeCount--){
-                    nodes[nodeCount].addEventListener('input', dedupe);
-                    nodes[nodeCount].addEventListener('focus', function(){reset()}, false);
-                }
-            } else {
-                while (nodeCount--){
-                    nodes[nodeCount].addEventListener('input', main);
-                    nodes[nodeCount].addEventListener('focus', function(){reset()}, false);
-                }
+        if (ua.indexOf('Android') > -1 && ua.indexOf("Firefox") > -1) {
+            while (nodeCount--){
+                nodes[nodeCount].addEventListener('input', dedupe);
+                nodes[nodeCount].addEventListener('focus', function(){reset()}, false);
             }
-        };
+        } else {
+            while (nodeCount--){
+                nodes[nodeCount].addEventListener('input', main);
+                nodes[nodeCount].addEventListener('focus', function(){reset()}, false);
+            }
+        }
     }
 
     document.addEventListener("DOMContentLoaded", init, false);
