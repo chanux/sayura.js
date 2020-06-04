@@ -45,6 +45,14 @@
              width: 100%;
              height: 100px;
         }
+        .buttons {
+            text-align:justify;
+        }
+        .buttons:after {
+          content:'';
+          display:inline-block;
+          width:99.5%;/* generates an extra transparent line */
+        }
         .skip-link {
              position: absolute;
              top: -40px;
@@ -63,17 +71,19 @@
     <a class="skip-link" href="#main">Skip to main</a>
     <div id="wrapper">
     <h1>~~~Sayura.js~~~</h1>
-    <p class="bodyText">Type in the text box to have your text converted to sinhala.</p>
     <main id="main">
         <label>
-            Write Here:
+            <p class="bodyText">Type Here for Sinhala:</p>
             <textarea id="ta" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
         </label>
     </main>
-    <button id="sayuraToggle" onclick="sayura.toggle();toggleButtonText(this);">Disable Sayura</button>
-    <button id="clearText" onclick="sayura.clear(document.getElementById('ta'));">Clear Text</button>
-    <p class="bodyText"><a href="https://docs.google.com/viewer?url=http://www.sayura.net/im/sayura.pdf" target="_blank" rel="noopener" >Sayura typing guide by Anuradha</a></p>
+    <div class="buttons">
+        <button id="sayuraToggle" onclick="sayura.toggle();toggleButtonText(this);">Disable Sayura</button>
+        <button id="clearText" onclick="sayura.clear(document.getElementById('ta'));">Clear Text</button>
+        <button id="copyText" class="cp-btn" data-clipboard-target="#ta">Copy Text</button>
     </div>
+    <p class="bodyText"><a href="https://docs.google.com/viewer?url=http://www.sayura.net/im/sayura.pdf" target="_blank" rel="noopener" >Sayura typing guide by Anuradha</a></p>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js"></script>
     <script type="text/javascript">
         function toggleButtonText(el){
             el.innerHTML = (el.innerHTML) == "Disable Sayura" ? "Enable Sayura" : "Disable Sayura";
@@ -89,6 +99,7 @@
            console.log('Service Worker Ready');
         });
       }
+      new ClipboardJS('.cp-btn');
     </script>
 </body>
 </html>
