@@ -119,7 +119,7 @@
 
     function isVowel(character)
     {
-        var vowels = ['a', 'A', 'e', 'E', 'i', 'I', 'o', 'O', 'u', 'q', 'V']
+        var vowels = ['a', 'A', 'e', 'E', 'i', 'I', 'o', 'O', 'u', 'U', 'q', 'V']
         for(var i=0;i<vowels.length;i++){
             if(vowels[i]==character){return true};
         }
@@ -175,6 +175,7 @@
     function main(e) {
         if (!active) {return;}
         if (!e) var e = window.event; //for IE
+        if (e.data == null) return;
 
         if (e.data  == " ")
         {
