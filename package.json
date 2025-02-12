@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "esbuild": "^0.4.3"
+    "esbuild": "^0.25.0"
   },
   "scripts": {
     "build": "esbuild sayura.js --minify --outfile=app/sayura.min.js;cp favicon.ico app/",
